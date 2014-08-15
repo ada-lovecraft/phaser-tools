@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  h1 Audio Sprite Generator
+  div(ng-controller="AudioSpriteController as audioSprite")
+    div.row
+        div.drop-box.col-md-12( ng-file-drop='audioSprite.uploader.onFileSelect($files)', 
+                                ng-file-drag-over-class="audioSprite.uploader.dragOverClass($event)", 
+                                ng-file-drag-over-delay="100") 
+                                span(ng-hide="audioSprite.uploader.isUploading") Drop wav and mp3 Files Here
+                                span(ng-show="audioSprite.uploader.isUploading") Uploading...
+                                  img(src="images/ajax-loader.gif")
+
+    div.row
+      .list-group.col-md-3(ng-show="audioSprite.uploader.files")
+        a.list-group-item(ng-repeat="file in audioSprite.uploader.files", ng-click="audioSprite.setActive(file)")
+            h4.list-group-item-heading {{file.name}}
+            div.row.list-group-item-text.small
+              span.col-md-6 Length: {{file.duration}} ms
+              span.col-md-6 Quality: {{file.format.sampleRate}}Hz
+      .col-md-9
+        #peaks-container
+        audio
+          source(src="uploads/2e2be052f41278f02631d5325e6f3631.mp3", type="audio/mpeg")
+          //source(ng-src="{{audioSprite.source.ogg", type="audio/ogg")
+    div.row(ng-show="audioSprite.uploader.files")
+      button.btn(ng-click="audioSprite.create()") 
+        span(ng-hide="audioSprite.isGenerating") Generate Audio Sprite
+        span(ng-show="audioSprite.isGenerating") Generating... 
+          img(src="images/ajax-loader.gif")
+
